@@ -32,7 +32,6 @@ func main() {
 	*/
 
 	var eucJis1st = [23902]rune{}              //  A1A1(41377) ~ FEFE(65278)
-	var eucJisHankaku = [63]rune{}             // 8EA1 (36513) ~  8EDF (36575)
 	var eucJis2nd = [23894]rune{}              // 8FA1A1 (9413025) ~ 8FFEF6 (9436918)
 	var eusJis1stCombined = map[rune][2]rune{} // 0xA1A1 ~ 0xFEFE
 	var eusJis1stCombinedKeys = []rune{}
@@ -69,7 +68,6 @@ func main() {
 			break
 
 		case 0x8EA1 <= euc_code && euc_code <= 0x8EDF:
-			eucJisHankaku[euc_code-0x8EA1] = rune(uni_code1)
 			break
 
 		case 0x8EE0 <= euc_code && euc_code <= 0x8EFE:
@@ -84,15 +82,15 @@ func main() {
 		}
 	}
 
-	outputFile(eucJis1st[:], eucJisHankaku[:], eucJis2nd[:], eusJis1stCombined, eusJis1stCombinedKeys)
+	outputFile(eucJis1st[:], eucJis2nd[:], eusJis1stCombined, eusJis1stCombinedKeys)
 }
 
-func outputFile(eucJis1st []rune, eucJisHankaku []rune, eucJis2nd []rune, eusJis1stCombined map[rune][2]rune, eusJis1stCombinedKeys []rune) {
+func outputFile(eucJis1st []rune, eucJis2nd []rune, eusJis1stCombined map[rune][2]rune, eusJis1stCombinedKeys []rune) {
 	fmt.Print("// GENERATED FROM https://x0213.org/codetable/euc-jis-2004-std.txt, DO NOT EDIT\n")
-	fmt.Print("package table\n\n")
+	fmt.Print("package eucjis2004\n\n")
 
 	// var eucJis1st = [23902]rune{}  //  A1A1(41377) ~ FEFE(65278)
-	fmt.Print("var EUC_JIS_1ST_MAP = [...]rune{")
+	fmt.Print("var eucJis1stMap = [...]rune{")
 	for idx, v := range eucJis1st {
 		if idx%16 == 0 {
 			fmt.Print("\n")
@@ -101,18 +99,8 @@ func outputFile(eucJis1st []rune, eucJisHankaku []rune, eucJis2nd []rune, eusJis
 	}
 	fmt.Print("\n}\n")
 
-	// var eucJisHankaku = [63]rune{} // 8EA1 (36513) ~  8EDF (36575)
-	fmt.Print("\nvar EUC_JIS_HANKAKU_MAP = [...]rune{")
-	for idx, v := range eucJisHankaku {
-		if idx%16 == 0 {
-			fmt.Print("\n")
-		}
-		fmt.Printf("0x%x,", v)
-	}
-	fmt.Print("\n}\n")
-
 	// var eucJis2nd = [23902]rune{}  // 8FA1A1 (9413025) ~ 8FFEFE (9436926)
-	fmt.Print("\nvar EUC_JIS_2ND_MAP = [...]rune{")
+	fmt.Print("\nvar eucJis2ndMap = [...]rune{")
 	for idx, v := range eucJis2nd {
 		if idx%16 == 0 {
 			fmt.Print("\n")
@@ -125,7 +113,7 @@ func outputFile(eucJis1st []rune, eucJisHankaku []rune, eucJis2nd []rune, eusJis
 	sort.Slice(eusJis1stCombinedKeys, func(i, j int) bool {
 		return i < j
 	})
-	fmt.Print("\nvar EUC_JIS_1ST_COMBINED = map[int32][2]rune {\n")
+	fmt.Print("\nvar eucJis1stCombined = map[int][2]rune {\n")
 	for _, k := range eusJis1stCombinedKeys {
 		v := eusJis1stCombined[k]
 		fmt.Printf("0x%x: {0x%x, 0x%x},\n", k, v[0], v[1])

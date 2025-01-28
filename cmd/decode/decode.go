@@ -2,13 +2,13 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 
-	"github.com/waynezhang/eucjis2004decode/decode"
+	"github.com/waynezhang/eucjis2004decode/eucjis2004"
+	"golang.org/x/text/transform"
 )
 
 func main() {
@@ -24,16 +24,10 @@ func main() {
 	}
 	defer f.Close()
 
-	buf := bytes.NewBuffer(nil)
-
-	s := bufio.NewScanner(f)
+	dec := transform.NewReader(f, &eucjis2004.EUCJIS2004Decoder{})
+	s := bufio.NewScanner(dec)
 	for s.Scan() {
-		buf.Reset()
-
-		err := decode.Convert(s.Bytes(), buf)
-		if err != nil {
-			fmt.Println("invalid line", s.Text())
-		}
-		fmt.Println(buf.String())
+		text := s.Text()
+		fmt.Println(text)
 	}
 }

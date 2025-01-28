@@ -1,4 +1,4 @@
-package decode
+package eucjis2004
 
 import (
 	"bufio"
@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDecode(t *testing.T) {
+func TestConvert(t *testing.T) {
 	f, err := os.Open("../testdata/euc-jis-2004-with-char.txt")
 	assert.Nil(t, err)
 	defer f.Close()
@@ -49,7 +49,7 @@ func TestDecode(t *testing.T) {
 	}
 }
 
-func TestDecode1(t *testing.T) {
+func TestConvert2(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
 
 	err := Convert([]byte{}, buf)
@@ -105,11 +105,10 @@ func TestDecode2(t *testing.T) {
 		{0x8F, 0xFE, 0xF7},
 		{0x8F, 0xFE, 0xF8},
 		{0x8F, 0xFF, 0x00},
-		{0x8F, 0xFF, 0x00},
 	}
 
 	for idx, c := range cases {
-		msg := "case " + strconv.Itoa(idx)
+		msg := "case " + strconv.Itoa(idx) + " " + hex.Dump(c)
 
 		buf.Reset()
 		err = Convert(c, buf)

@@ -11,7 +11,6 @@ import (
 
 // To align with iconv
 var replaceMap = map[rune]rune{
-	0xA1BD: 0x2015,
 	0xA1B1: 0xFFE3,
 	0xA1EF: 0xFFE5,
 }

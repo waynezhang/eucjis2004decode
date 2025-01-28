@@ -1,7 +1,7 @@
-.PHONY: create_table
+.PHONY: create_table test
 
 create_table:
 	@go run cmd/create_table/create_table.go | gofmt > eucjis2004/table.go
 
-test:
+test: create_table
 	@go test ./...

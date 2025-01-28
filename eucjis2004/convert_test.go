@@ -42,9 +42,6 @@ func TestConvert(t *testing.T) {
 
 		err := Convert(src_s.Bytes(), buf)
 		assert.Nil(t, err)
-		if idx == 216 {
-			continue
-		} // FIXME —(0x2014) vs ― (0x2015)
 		assert.Equal(t, expected_s.Bytes(), buf.Bytes(), "line "+strconv.Itoa(idx))
 	}
 }
